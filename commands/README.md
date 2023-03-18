@@ -1,5 +1,7 @@
 ## Useful commands
 
+### Token Program
+
 Detailed explainations for all codes can be found in official website [Token Program](https://spl.solana.com/token)
 
 Create wallet
@@ -14,7 +16,11 @@ In order to see public key of your solana wallet
 solana-keygen pubkey
 ```
 
-Check your balance of devnet 
+#### DEVNET
+
+All commands given below in this section given for devnet in Solana.
+
+Check your balance on devnet 
 
 ```
 solana balance --url devnet
@@ -79,3 +85,38 @@ In order to transfer token to another account in devnet:
 ```
 spl-token transfer [token-address] [amount] [receiver-token-address] --allow-unfunded-recipient --fund-recipient
 ```
+
+### Anchor
+
+In order to check whether anchor is installed and PATH is correctly set:
+```
+anchor --version
+```
+
+See the project ids (it must be same as it is decleared in lib.rs)
+```
+anchor keys list
+```
+
+To create project
+```
+anchor init [project-name]
+```
+
+To build the project
+```
+cd [project-name]
+anchor build
+```
+
+To test the project
+```
+anchor test --skip-local-validator
+```
+
+You might encounter with an error related to Transactions. In that case, execute the following command in seperate window and test the program again
+```
+solana-test-validator
+```
+
+

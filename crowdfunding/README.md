@@ -34,3 +34,5 @@ anchor deploy
 ```
 
 Congatulations. You can find your program in Solana Explorer in devnet network by calling it with given program id.
+
+In order to make donations or withdraw funds, run the frontend app build it first and the run it with **npm**.

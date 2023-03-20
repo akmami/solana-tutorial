@@ -1,0 +1,41 @@
+const { Connection, clusterApiUrl, Keypair, LAMPORTS_PER_SOL, Authorized, Lockup, StakeProgram, sendAndConfirmTransaction } = require("@solana/web3.js");
+
+const main = async() => {
+    const connection = new Connection(clusterApiUrl("devnet"), "processed");
+    const wallet = Keypair.generate();
+    const airdropSigniture = await connection.requestAirdrop(
+        wallet.publicKey,
+        1 * LAMPORTS_PER_SOL
+    );
+    await connection.confirmTransaction(airdropSigniture);
+    
+    const stakeAccount = Keypair.generate()
+    const minimumRent = await connection.getMinimumBalanceForRentExemption(StakeProgram.space);
+    const amountUserWantsToStake = 0.5 * LAMPORTS_PER_SOL;
+    const amountToStake = minimumRent + amountUserWantsToStake;
+    const createStakeAccount = StakeProgram.createAccount({
+        authorized: new Authorized(wallet.publicKey, wallet.publicKey), // 0: stake_authority, 1: withdraw_authority
+        fromPubkey: wallet.publicKey,
+        lamports: amountToStake,
+        lockup: new Lockup(0, 0, wallet.publicKey), // 0: expire at 0, 1: epoch, 2: public_key
+        stakePubkey: stakeAccount.publicKey
+    });
+    const createStateAccountTxId = await sendAndConfirmTransaction(connection, createStakeAccount, [wallet, stakeAccount]);
+    console.log(`Stake account created, Tx Id: ${createStateAccountTxId}`);
+    
+    let stakeBalance = await connection.getBalance(stakeAccount.publicKey);
+    console.log(`Stake account balance: ${stakeBalance / LAMPORTS_PER_SOL}`);
+
+    let stakeStatus = await connection.getStakeActivation(stakeAccount.publicKey);
+    console.log(`Stake account status: ${stakeStatus.state}`);
+};
+
+const run_main = async() => {
+    try {
+        await main();
+    } catch (error) {
+        console.error(error);
+    }
+};
+
+run_main();

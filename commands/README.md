@@ -119,4 +119,13 @@ You might encounter with an error related to Transactions. In that case, execute
 solana-test-validator
 ```
 
+### Metaplex
 
+Metaplex is a tool that is enables users to create and launch NFT projects on Solana.
+
+It is a good practice to clone the metaplex repository into the specific directory in your machine
+
+```
+git clone https://github.com/metaplex-foundation/js.git ~/metaplex-foundation/js
+yarn install --cwd ~/metaplex-foundation/js
+```
